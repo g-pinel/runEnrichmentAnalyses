@@ -39,6 +39,13 @@ keytypes(org.Hs.eg.db)
 - **org_db**: Annotation package for the target organism (e.g. org.Hs.eg.db for human data, or org.Mm.eg.db for mouse data).
 - **outdir**: the path to the directory where all result files will be output.
 
+> [!IMPORTANT]
+> Files corresponding to DEGs with a log2FoldChange > 0 will contain 'pos' in their filename, while those with log2FC < 0 will contain 'neg'.
+
+> [!NOTE]
+> This function by default runs all types of supported enrichment analyses (Gene Ontology, KEGG, Wiki Pathways and Reactome). To disable some of them, set one/multiple of the following optional parameters to FALSE:<br><br>
+> GOBP, KEGG, WIKIPATHWAYS, REACTOME
+
 ### batchRunEnrichmentAnalyses call example
 ```
 enrichments <- batchRunEnrichmentAnalyses(dds_list,
@@ -49,11 +56,6 @@ enrichments <- batchRunEnrichmentAnalyses(dds_list,
                                           outdir = "results/ORA/")
 ```
 
-> [!NOTE]
-> This function by default runs all types of supported enrichment analyses (Gene Ontology, KEGG, Wiki Pathways and Reactome). To disable some of them, set one/multiple of the following optional parameters to FALSE:<br><br>
-> GOBP, KEGG, WIKIPATHWAYS, REACTOME
-<br>
-
 ## runEnrichmentAnalyses function
 This is the function that performs the enrichment analyses. Can be run separately from *batchRunEnrichmentAnalyses* if you only wish to run one set of enrichments. It performs the following:
 - Creates a results directory/detects an existing one matching the input DDS object name inside the output directory.
@@ -63,6 +65,3 @@ This is the function that performs the enrichment analyses. Can be run separatel
 - Runs hypergeometric tests (classic enrichment analyses).
 - Writes CSV files with the results in the results directory.
 - Returns a list of data frames with results.
-
-> [!IMPORTANT]
-> Files corresponding to DEGs with a log2FoldChange > 0 will contain 'pos' in their filename, while those with log2FC < 0 will contain 'neg'.
