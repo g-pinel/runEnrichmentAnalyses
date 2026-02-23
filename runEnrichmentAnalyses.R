@@ -3,7 +3,6 @@ library(clusterProfiler)
 library(ReactomePA)
 library(org.Mm.eg.db)
 library(org.Hs.eg.db)
-library(biomaRt)
 
 runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, entrez_df, org_db, outdir, GOBP = TRUE, KEGG = TRUE, WIKIPATHWAYS = TRUE, REACTOME = TRUE){
   
