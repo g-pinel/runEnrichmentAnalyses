@@ -4,6 +4,24 @@ library(ReactomePA)
 library(org.Mm.eg.db)
 library(org.Hs.eg.db)
 
+batchRunEnrichmentAnalyses <- function(dds_list, gene_id_format, counts, entrez_df, org_db, outdir, GOBP = TRUE, KEGG = TRUE, WIKIPATHWAYS = TRUE, REACTOME = TRUE){
+  
+  res_list <- list() 
+  
+  for(i in 1:length(dds_list)){
+    
+    custom_label <- names(dds_list[i])
+    
+    res_list[[i]] <- runEnrichmentAnalyses(dds = dds_list[[i]],
+                                           gene_id_format = gene_id_format,
+                                           custom_label = custom_label,
+                                           counts = counts,
+                                           entrez_df = symbol2ensembl2entrez, 
+                                           org_db = org_db,
+                                           outdir = outdir)
+  }
+}
+
 runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, entrez_df, org_db, outdir, GOBP = TRUE, KEGG = TRUE, WIKIPATHWAYS = TRUE, REACTOME = TRUE){
   
   res_dirname <- custom_label
@@ -246,22 +264,4 @@ runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, ent
 }
 
 
-batchRunEnrichmentAnalyses <- function(dds_list, gene_id_format, counts, entrez_df, org_db, outdir, GOBP = TRUE, KEGG = TRUE, WIKIPATHWAYS = TRUE, REACTOME = TRUE){
-  
-  # dds_list = subc_dds
-  
-  res_list <- list() 
-  
-  for(i in 1:length(dds_list)){
-    
-    custom_label <- names(dds_list[i])
-    
-    res_list[[i]] <- runEnrichmentAnalyses(dds = dds_list[[i]],
-                                           gene_id_format = gene_id_format,
-                                           custom_label = custom_label,
-                                           counts = counts,
-                                           entrez_df = symbol2ensembl2entrez, 
-                                           org_db = org.Mm.eg.db,
-                                           outdir = outdir)
-  }
-}
+
