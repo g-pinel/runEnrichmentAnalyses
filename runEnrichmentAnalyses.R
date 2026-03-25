@@ -36,7 +36,7 @@ runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, ent
   }
   
   message("Creating log file...")
-  sink(file(paste0(res_dir, "/log.txt"), open = "wt"), 
+  sink(file(paste0(res_dir, "/log_", custom_label, ".txt"), open = "wt"), 
        append=FALSE, 
        type = "message")
   
