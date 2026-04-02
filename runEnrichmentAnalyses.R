@@ -18,8 +18,14 @@ batchRunEnrichmentAnalyses <- function(dds_list, gene_id_format, counts, entrez_
                                            counts = counts,
                                            entrez_df = symbol2ensembl2entrez, 
                                            org_db = org_db,
-                                           outdir = outdir)
+                                           outdir = outdir, 
+                                           GOBP = GOBP, 
+                                           KEGG = KEGG, 
+                                           WIKIPATHWAYS = WIKIPATHWAYS, 
+                                           REACTOME = REACTOME)
+    names(res_list)[i] <- custom_label
   }
+  return(res_list)
 }
 
 runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, entrez_df, org_db, outdir, GOBP = TRUE, KEGG = TRUE, WIKIPATHWAYS = TRUE, REACTOME = TRUE){
@@ -122,6 +128,9 @@ runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, ent
     if(is.null(gobp_res_neg)){gobp_res_neg <- NA}
     gobp_res_neg_df <- as.data.frame(gobp_res_neg)
     write.csv(gobp_res_neg_df, paste0(res_dir, "/GOBP_neg_", custom_label, ".csv"), row.names = F)
+  }else{
+    gobp_res_pos <- NA
+    gobp_res_neg <- NA
   }
   
   # KEGG, WikiPathways and reactome require entrez ids
@@ -186,6 +195,9 @@ runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, ent
     kegg_res_neg_df <- as.data.frame(kegg_res_neg)
     write.csv(kegg_res_neg_df, paste0(res_dir, "/KEGG_neg_", custom_label, ".csv"), row.names = F)
     
+  }else{
+    kegg_res_pos <- NA
+    kegg_res_neg <- NA
   }
   
   
@@ -214,6 +226,9 @@ runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, ent
     wiki_res_neg_df <- as.data.frame(wiki_res_neg)
     write.csv(wiki_res_neg_df, paste0(res_dir, "/WIKIPATHWAYS_neg_", custom_label, ".csv"), row.names = F)
     
+  }else{
+    wiki_res_pos <- NA
+    wiki_res_neg <- NA
   }
   
   
@@ -241,25 +256,31 @@ runEnrichmentAnalyses <- function(dds, gene_id_format, custom_label, counts, ent
     reactome_res_neg_df <- as.data.frame(reactome_res_neg)
     write.csv(reactome_res_neg_df, paste0(res_dir, "/REACTOME_neg_", custom_label, ".csv"), row.names = F)
     
+  }else{
+    reactome_res_pos <- NA
+    reactome_res_neg <- NA
   }
   
   closeAllConnections()
   
   res <- list()
   
-  if(exists("gobp_res_pos")){res[[1]] <- gobp_res_pos}else{res[[1]] <- "GO_not_run"}
-  if(exists("gobp_res_neg")){res[[2]] <- gobp_res_neg}else{res[[2]] <- "GO_not_run"}
-  if(exists("gobp_res_pos")){res[[3]] <- kegg_res_pos}else{res[[3]] <- "KEGG_not_run"}
-  if(exists("gobp_res_neg")){res[[4]] <- kegg_res_neg}else{res[[4]] <- "KEGG_not_run"}
-  if(exists("wiki_res_pos")){res[[5]] <- wiki_res_pos}else{res[[5]] <- "wikipathways_not_run"}
-  if(exists("wiki_res_neg")){res[[6]] <- wiki_res_neg}else{res[[6]] <- "wikipathways_not_run"}
-  if(exists("reactome_res_pos")){res[[7]] <- reactome_res_pos}else{res[[7]] <- "reactome_not_run"}
-  if(exists("reactome_res_neg")){res[[8]] <- reactome_res_neg}else{res[[8]] <- "reactome_not_run"}
+  if(!is.na("gobp_res_pos")){res[[1]] <- gobp_res_pos}else{res[[1]] <- NA}
+  if(!is.na("gobp_res_neg")){res[[2]] <- gobp_res_neg}else{res[[2]] <- NA}
+  if(!is.na("kegg_res_pos")){res[[3]] <- kegg_res_pos}else{res[[3]] <- NA}
+  if(!is.na("kegg_res_neg")){res[[4]] <- kegg_res_neg}else{res[[4]] <- NA}
+  if(!is.na("wiki_res_pos")){res[[5]] <- wiki_res_pos}else{res[[5]] <- NA}
+  if(!is.na("wiki_res_neg")){res[[6]] <- wiki_res_neg}else{res[[6]] <- NA}
+  if(!is.na("reactome_res_pos")){res[[7]] <- reactome_res_pos}else{res[[7]] <- NA}
+  if(!is.na("reactome_res_neg")){res[[8]] <- reactome_res_neg}else{res[[8]] <- NA}
   
   names(res) <- c("GOBP_pos", "GOBP_neg", 
                   "KEGG_pos", "KEGG_neg", 
                   "WIKIPATHWAYS_pos", "WIKIPATHWAYS_neg", 
                   "REACTOME_pos", "REACTOME_neg")
+  
+  res <- res[!is.na(res)]
+  
   return(res)
 }
 
